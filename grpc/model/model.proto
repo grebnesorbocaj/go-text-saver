@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "github.com/grebnesorbocaj/go-text-saver/model/model";
+
+package model;
+
+// The greeting service definition.
+service Analyzer {
+  // Sends a greeting
+  rpc Analyze (AnalyzeRequest) returns (AnalyzeReply) {}
+}
+
+// The request message containing the user's name.
+message AnalyzeRequest {
+  string text = 1;
+}
+
+// The response message containing the greetings
+message AnalyzeReply {
+  string message = 1;
+}
