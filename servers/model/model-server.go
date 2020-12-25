@@ -5,9 +5,9 @@ import (
 	"context"
 	"log"
 	"net"
-	"strconv"
 	"strings"
 
+	// "github.com/cdipaolo/sentiment"
 	pb "github.com/grebnesorbocaj/go-text-saver/grpc/model"
 	"google.golang.org/grpc"
 )
@@ -25,10 +25,30 @@ type server struct {
 func (s *server) Analyze(ctx context.Context, in *pb.AnalyzeRequest) (*pb.AnalyzeReply, error) {
 	log.Printf("Received: %v", in.GetText())
 	text := in.GetText()
-	textSlice := strings.Split(text, " ")
-	sliceLength := strconv.Itoa(len(textSlice))
-	return &pb.AnalyzeReply{Message: sliceLength + " words in text."}, nil
+	score := reverseText(text)
+
+	return &pb.AnalyzeReply{Message: "Sentiment Analyzed Score: " + score}, nil
 }
+
+func reverseText(s string) string {
+	textSlice := strings.Split(s, " ")
+	reversedText := ""
+	for i := len(textSlice); i > 0; i-- {
+		reversedText += textSlice[i-1] + " "
+	}
+	return reversedText
+}
+
+// func analyzeText(s string) string {
+// 	model, err := sentiment.Train()
+// 	if err != nil {
+// 		panic(fmt.Sprintf("Could not restore model!\n\t%v\n", err))
+// 	}
+
+// 	analysis := model.SentimentAnalysis(s, sentiment.English)
+// 	fmt.Println(analysis)
+// 	return strconv.Itoa(int(analysis.Score))
+// }
 
 func main() {
 	lis, err := net.Listen("tcp", port)
