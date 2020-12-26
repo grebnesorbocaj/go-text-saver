@@ -5,9 +5,9 @@ import (
 	"context"
 	"log"
 	"net"
+	"strconv"
 	"strings"
 
-	// "github.com/cdipaolo/sentiment"
 	pb "github.com/grebnesorbocaj/go-text-saver/grpc/model"
 	"google.golang.org/grpc"
 )
@@ -25,9 +25,10 @@ type server struct {
 func (s *server) Analyze(ctx context.Context, in *pb.AnalyzeRequest) (*pb.AnalyzeReply, error) {
 	log.Printf("Received: %v", in.GetText())
 	text := in.GetText()
-	score := reverseText(text)
+	score := analyzeText(text)
+	res := strconv.Itoa(score)
 
-	return &pb.AnalyzeReply{Message: "Sentiment Analyzed Score: " + score}, nil
+	return &pb.AnalyzeReply{Message: "Sentiment Analyzed Score: " + res}, nil
 }
 
 func reverseText(s string) string {
@@ -37,6 +38,10 @@ func reverseText(s string) string {
 		reversedText += textSlice[i-1] + " "
 	}
 	return reversedText
+}
+
+func analyzeText(s string) int {
+	return len(s)
 }
 
 // func analyzeText(s string) string {
